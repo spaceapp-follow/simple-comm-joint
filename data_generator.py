@@ -39,8 +39,6 @@ class DataGenerator():
         for item in self.raw_data:
             bin_str="010"
             bin_str+=bin_str+B_arr(int=item[0],length=16).bin+B_arr(int=item[1],length=16).bin+B_arr(float=item[2],length=32).bin+bin_str
-            print(bin_str)
-            print("-->",bin_str)
             self.packed_data.append(bin_str)
         self.packed_data.append(start_end)
 

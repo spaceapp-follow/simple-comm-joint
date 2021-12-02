@@ -27,12 +27,13 @@ class DataGenerator():
         
 
     def unpack(self):
+        '''this is tanel' part
+        '''
         for i in self.packed_data[1:len(self.packed_data)-1]:
             a=i[3:51]
             y=[]
             t=len(a)//3
             for k in range(3):
-                print(k*t,(k+1)*t)
                 b=a[(k*t):(k+1)*t]
                 decimalnum=int(b,2)
                 y.append(decimalnum)

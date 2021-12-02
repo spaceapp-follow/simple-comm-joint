@@ -8,8 +8,7 @@ class Communication():
         data_object=dg.DataGenerator()
         data_object.generateData()
         data_object.packData()
-        self.raw_data = data_object.raw_data
-        self.packed_data = data_object.packed_data
+        self.all_data = data_object.packed_data
     def setVariablesPubSub():
         pass
     def transmitPubSub():

@@ -9,11 +9,41 @@ class Communication():
         data_object.generateData()
         data_object.packData()
         self.all_data = data_object.packed_data
+        self.address = "tcp://*:5555"
     def setVariablesPubSub():
         pass
-    def transmitPubSub():
-        pass
-    def receivePubSub():
+
+    def transmitPubSub(self,packed_data,length):
+
+            pubctx = zmq.Context()
+            self.sender = pubctx.socket(zmq.PUB)
+            self.sender.bind(self.address)
+
+            for self.packet_count in range(length):
+                self.message = packed_data[self.packet_count]   
+                self.sender.send_pyobj(self.message)
+
+
+        
+    def receivePubSub(self,length):
+        subctx = zmq.Context()
+
+        receiver = subctx.socket(zmq.SUB)
+
+        receiver.connect(self.address)
+        receiver.setsockopt_string(zmq.SUBSCRIBE, '')
+        self.all_data = []
+        while True:
+
+            message = receiver.recv_pyobj()
+    
+            print(message)
+
+
+            if len(self.all_data) < length :
+                self.all_data.append(message)
+            else:
+                break
         pass
     def setVariablesPushPull():
         pass

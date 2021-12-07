@@ -29,6 +29,7 @@ class Communication():
         self.all_data = []
         message=""
         while message!='0'*54:
+            #this is not suitable for float packages, find another way
             message = receiver.recv_pyobj()
             print(message)
             self.all_data.append(message)

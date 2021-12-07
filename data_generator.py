@@ -1,10 +1,15 @@
 import random
 import csv
+from bitstring import BitArray as B_arr
 
 class DataGenerator():
     def __init__(self):
         self.raw_data=[]
         self.packed_data=[]
+
+    def generateFloatData(self):
+        for _ in range(50):
+            self.raw_data.append([random.randint(1,30),random.randint(100,200),round(random.uniform(0.0,10.0),3)])
 
     def generateData(self):
         for _ in range(50):
@@ -24,7 +29,18 @@ class DataGenerator():
             bin_str+="010"
             self.packed_data.append(bin_str)
         self.packed_data.append(start_end)
-        
+      
+    def packFloatData(self):
+        if self.raw_data==[]:
+            print("First you need to generate data")
+            return
+        start_end='0'*102
+        self.packed_data.append(start_end)
+        for item in self.raw_data:
+            bin_str="010"
+            bin_str+=bin_str+B_arr(int=item[0],length=16).bin+B_arr(int=item[1],length=16).bin+B_arr(float=item[2],length=32).bin+bin_str
+            self.packed_data.append(bin_str)
+        self.packed_data.append(start_end)
 
     def unpack(self):
         '''this is tanel' part
@@ -39,7 +55,7 @@ class DataGenerator():
                 y.append(decimalnum)
             self.raw_data.append(y)
 
-    def extractCsv(file_name,arr):
+    def extractCsv(self,file_name,arr):
         with open(file_name,mode="w",newline="") as file:
             writer=csv.writer(file)
         for row in arr:

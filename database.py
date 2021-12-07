@@ -2,22 +2,27 @@
 import mysql.connector
 import pandas as pd
 class Database():
-    def _init_(self,host,user,password,csvPath):
+    def _init_(self,host,user,password,csvPath,arrayData):
         self.host = host
         self.user = user
         self.password = password
+        
+        """
+        csv = pd.read_csv(csvPath)
+        id = csv[['id']].values.tolist()
+        coordinates = csv[['coordinates']].values.tolist()
+        time = csv[['time']].values.tolist()
+        self.data = [id,coordinates,time]
+        """
+        self.data = arrayData
+    def setVar(self):
         self.mydb = mysql.connector.connect(
             host = self.host,
             user = self.user,
             password = self.password
             )
         self.cursor = self.mydb.cursor()
-        csv = pd.read_csv(csvPath)
-        id = csv[['id']].values.tolist()
-        coordinates = csv[['coordinates']].values.tolist()
-        time = csv[['time']].values.tolist()
-        self.data = [id,coordinates,time]
-    def insertData():
+    def insertData(self,database,table):
         self.cursor.execute("USE {}".format(database))
         self.cursor.execute("CREATE TABLE IF NOT EXISTS {} (id INT, coordinates INT, time INT)".format(table))
         sqlquery = "INSERT INTO {} (id, coordinates, time) VALUES (%s, %s, %s)".format(table)

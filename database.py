@@ -17,7 +17,7 @@ class Database():
         coordinates = csv[['coordinates']].values.tolist()
         time = csv[['time']].values.tolist()
         self.data = [id,coordinates,time]
-    def insertData():
+    def insertData(self,database,table):
         self.cursor.execute("USE {}".format(database))
         self.cursor.execute("CREATE TABLE IF NOT EXISTS {} (id INT, coordinates INT, time INT)".format(table))
         sqlquery = "INSERT INTO {} (id, coordinates, time) VALUES (%s, %s, %s)".format(table)

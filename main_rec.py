@@ -3,6 +3,7 @@ from data_generator import DataGenerator
 #from database import Database
 
 communicator=Communication()
+dataGen = DataGenerator()
 
 """
 host=""
@@ -14,4 +15,9 @@ database=""
 table=""
 base.insertData(database,table)
 """
-communicator.transmitPushPull()
+received_data = communicator.receivePushPull()
+print(received_data)
+dataGen.packed_data=received_data
+dataGen.unpack()
+print(dataGen.raw_data)
+

@@ -53,12 +53,12 @@ class Communication():
         sender = context.socket(zmq.PUSH)
         sender.bind("tcp://*:5556")
 
-        for i in range(len()):
-            sender.send_json(self.packed_data[i])
-            print(self.packed_data[i])
+        for i in range(len(self.all_data)):
+            sender.send_json(self.all_data[i])
+            print(self.all_data[i])
             time.sleep(0.2) #200ms delay between each loop
         
-        if i == len(self.packed_data) - 1:
+        if i == len(self.all_data) - 1:
             print("all the data is send")
 
     def receivePushPull(self):
@@ -74,7 +74,8 @@ class Communication():
             print(received_data)
             control_data.append(received_data)
 
-            if len(control_data) == len(self.packed_data):
+            if len(control_data) == len(self.all_data):
                 break
 
         print("all the data is received")
+        return control_data

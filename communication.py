@@ -10,54 +10,39 @@ class Communication():
         data_object.packData()
         self.all_data = data_object.packed_data
         self.address = "tcp://*:5555"
-    def setVariablesPubSub():
-        pass
 
-    def transmitPubSub(self,packed_data,length):
+    def transmitPubSub(self,):
+        pubctx = zmq.Context()
+        self.sender = pubctx.socket(zmq.PUB)
+        self.sender.bind(self.address)
 
-            pubctx = zmq.Context()
-            self.sender = pubctx.socket(zmq.PUB)
-            self.sender.bind(self.address)
-
-            for self.packet_count in range(length):
-                self.message = packed_data[self.packet_count]   
-                self.sender.send_pyobj(self.message)
-
-
-        
-    def receivePubSub(self,length):
+        for packet_index in range(len(self.all_data)):
+            self.message = self.all_data[packet_index]
+            self.sender.send_pyobj(self.message)
+    
+    def receivePubSub(self):
         subctx = zmq.Context()
-
         receiver = subctx.socket(zmq.SUB)
 
         receiver.connect(self.address)
         receiver.setsockopt_string(zmq.SUBSCRIBE, '')
         self.all_data = []
-        while True:
-
+        message=""
+        while message!='0'*54:
+            #this is not suitable for float packages, find another way
             message = receiver.recv_pyobj()
-    
             print(message)
+            self.all_data.append(message)
+             
 
-
-            if len(self.all_data) < length :
-                self.all_data.append(message)
-            else:
-                break
-        pass
-    def setVariablesPushPull():
-        pass
     def transmitPushPull(self):
         context = zmq.Context()
-
         sender = context.socket(zmq.PUSH)
         sender.bind("tcp://*:5556")
-
         for i in range(len(self.all_data)):
             sender.send_json(self.all_data[i])
             print(self.all_data[i])
             time.sleep(0.2) #200ms delay between each loop
-        
         if i == len(self.all_data) - 1:
             print("all the data is send")
 

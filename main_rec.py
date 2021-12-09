@@ -5,9 +5,6 @@ from database import Database
 communicator=Communication()
 dataGen = DataGenerator()
 
-
-
-
 received_data = communicator.receivePushPull()
 print(received_data)
 dataGen.packed_data=received_data
@@ -21,16 +18,11 @@ password="Qdvnl.22"
 csvPath=""
 
 base=Database()
-base.host = host
-base.user = user
-base.password = password
-base.csvPath = csvPath
-base.data = dataGen.raw_data
+base.establishConnection(host,user,password)
 database="tubitakdatabase"
 table="data1"
 
-base.setVar()
-base.insertData(database,table)
+base.insertData(database,table,dataGen.raw_data)
 
 
 

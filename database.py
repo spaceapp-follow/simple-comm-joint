@@ -18,4 +18,10 @@ class Database():
         self.cursor.executemany(sqlquery, data)
         self.mydb.commit()
     
+    def insertFloatData(self,database,table,data):
+        self.cursor.execute("USE {}".format(database))
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS {} (id INT, coordinates INT, time FLOAT)".format(table))
+        sqlquery = "INSERT INTO {} (id, coordinates, time) VALUES (%s, %s, %s)".format(table)
+        self.cursor.executemany(sqlquery, data)
+        self.mydb.commit()
     

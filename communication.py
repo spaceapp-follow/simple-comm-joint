@@ -28,11 +28,19 @@ class Communication():
         receiver.setsockopt_string(zmq.SUBSCRIBE, '')
         self.all_data = []
         message=""
-        while message!='0'*54:
-            #this is not suitable for float packages, find another way
-            message = receiver.recv_pyobj()
-            print(message)
-            self.all_data.append(message)
+        if len(message)==70:
+            while(message!='0'*70):
+                message = receiver.recv_pyobj()
+                print(message)
+                self.all_data.append(message)
+            return True
+        elif len(message)==54:
+            while(message!='0'*54):
+                message = receiver.recv_pyobj()
+                print(message)
+                self.all_data.append(message)
+            return False
+
              
 
     def transmitPushPull(self):

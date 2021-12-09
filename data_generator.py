@@ -36,12 +36,11 @@ class DataGenerator():
         if self.raw_data==[]:
             print("First you need to generate data")
             return
-        self.packed_data.append('1'*102)
+        self.packed_data.append('1'*70)
         for item in self.raw_data:
-            bin_str="010"
-            bin_str+=bin_str+B_arr(int=item[0],length=16).bin+B_arr(int=item[1],length=16).bin+B_arr(float=item[2],length=32).bin+bin_str
+            bin_str="010"+B_arr(int=item[0],length=16).bin+B_arr(int=item[1],length=16).bin+B_arr(float=item[2],length=32).bin+"010"
             self.packed_data.append(bin_str)
-        self.packed_data.append('0'*102)
+        self.packed_data.append('0'*70)
 
     def unpack(self):
         #unpacks the data in packed_data, puts the it in raw_data, only for ints
@@ -54,6 +53,15 @@ class DataGenerator():
                 decimalnum=int(b,2)
                 y.append(decimalnum)
             self.raw_data.append(y)
+
+    def unpackFloat(self):
+        #unpack bin-strings, put it in packed_data, third value is float
+        for i in self.packed_data[1:len(self.packed_data)-1]:
+            a="0b"+i[3:19]
+            b="0b"+i[19:35]
+            c="0b"+i[35:67]
+            self.raw_data.append([B_arr(a).int,B_arr(b).int,round(B_arr(c).float,3)])
+
 
     def extractCsv(self,file_name,arr):
         #extracts an array to a specified csv file

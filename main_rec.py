@@ -11,6 +11,7 @@ dataGen.packed_data=received_data
 dataGen.unpack()
 
 print(dataGen.raw_data)
+print("All data is converted")
 
 host="127.0.0.1"
 user="ebrar"
@@ -23,6 +24,7 @@ database="tubitakdatabase"
 table="data1"
 
 base.insertData(database,table,dataGen.raw_data)
+print("All data is inserted into database")
 
 
 

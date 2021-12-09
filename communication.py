@@ -3,15 +3,21 @@ import zmq
 import data_generator as dg
 
 class Communication():
-    def __init__(self):
+    def __init__(self,flag=0):
         # at the beginning, we generate and pack the data
         data_object=dg.DataGenerator()
-        data_object.generateData()
-        data_object.packData()
-        self.all_data = data_object.packed_data
+        if flag==1:
+            data_object.generateFloatData()
+            data_object.packFloatData()
+            self.all_data=data_object.packed_data
+        else:
+            print("here")
+            data_object.generateData()
+            data_object.packData()
+            self.all_data = data_object.packed_data
         self.address = "tcp://*:5555"
 
-    def transmitPubSub(self,):
+    def transmitPubSub(self):
         pubctx = zmq.Context()
         self.sender = pubctx.socket(zmq.PUB)
         self.sender.bind(self.address)
@@ -20,7 +26,7 @@ class Communication():
             self.message = self.all_data[packet_index]
             self.sender.send_pyobj(self.message)
     
-    def receivePubSub(self):
+    def receivePubSub(self,pack_len):
         subctx = zmq.Context()
         receiver = subctx.socket(zmq.SUB)
 
@@ -28,21 +34,11 @@ class Communication():
         receiver.setsockopt_string(zmq.SUBSCRIBE, '')
         self.all_data = []
         message=""
-        if len(message)==70:
-            while(message!='0'*70):
-                message = receiver.recv_pyobj()
-                print(message)
-                self.all_data.append(message)
-            return True
-        elif len(message)==54:
-            while(message!='0'*54):
-                message = receiver.recv_pyobj()
-                print(message)
-                self.all_data.append(message)
-            return False
-
-             
-
+        while message!='0'*pack_len:
+            message = receiver.recv_pyobj()
+            print(message)
+            self.all_data.append(message)
+            
     def transmitPushPull(self):
         context = zmq.Context()
         sender = context.socket(zmq.PUSH)
@@ -51,8 +47,7 @@ class Communication():
             sender.send_json(self.all_data[i])
             print(self.all_data[i])
             time.sleep(0.2) #200ms delay between each loop
-        if i == len(self.all_data) - 1:
-            print("all the data is send")
+        print("all the data is send")
 
     def receivePushPull(self):
         context = zmq.Context()
@@ -61,7 +56,6 @@ class Communication():
         receiver.connect("tcp://localhost:5556")
 
         control_data = [] #this will help us to verify the result
-
         while True:
             received_data = receiver.recv_json()
             print(received_data)
